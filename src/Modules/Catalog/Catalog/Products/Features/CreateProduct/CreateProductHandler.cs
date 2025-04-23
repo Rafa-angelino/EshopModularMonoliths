@@ -1,18 +1,40 @@
-﻿using MediatR;
-
-namespace Catalog.Products.Features.CreateProduct
+﻿namespace Catalog.Products.Features.CreateProduct
 {
-    public record CreateProductCommand(string Name, List<string> Category, string Description, string ImageFile, decimal Price) 
-        : IRequest<CreateProductResult>;
+    public record CreateProductCommand(ProductDto Product)
+        : ICommand<CreateProductResult>;
 
-    public record CreateProductResult(Guid Id);
-    public class CreateProductCommandHandler
-        : IRequestHandler<CreateProductCommand, CreateProductResult>
+    public record CreateProductResult(Guid Id); //resultado
+    public class CreateProductCommandHandler(CatalogDbContext dbContext)
+        : ICommandHandler<CreateProductCommand, CreateProductResult>
     {
-        public Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
+        public async Task<CreateProductResult> Handle(CreateProductCommand command, CancellationToken cancellationToken)
         {
-            //businnes logic to create a product    
-            
+            //create Product Entity from commando object
+            //save to database
+            //return the result
+
+            var product = CreateNewProduct(command.Product);
+
+            dbContext.Products.Add(product);
+            await dbContext.SaveChangesAsync(cancellationToken);
+
+            return new CreateProductResult(product.Id); 
+
+        }
+
+        private static Product CreateNewProduct(ProductDto productDto)
+        {
+            var product = Product.Create(
+                Guid.NewGuid(),
+                productDto.Name,
+                productDto.Category,
+                productDto.Description,
+                productDto.ImageFile,
+                productDto.Price
+                );
+            return product;
         }
     }
+
+    
 }
