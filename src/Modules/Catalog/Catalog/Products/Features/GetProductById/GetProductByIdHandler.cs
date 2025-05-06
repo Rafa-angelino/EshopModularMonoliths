@@ -19,6 +19,4 @@
             return new GetProductByIdResult(productDto);
         }
     }
-    {
-    }
 }

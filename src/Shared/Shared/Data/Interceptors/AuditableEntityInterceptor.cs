@@ -18,7 +18,7 @@ namespace Shared.Data.Interceptors
             return base.SavingChangesAsync(eventData, result, cancellationToken);
         }
 
-        private void UpdateEntities(DbContext? context)
+        private static void UpdateEntities(DbContext? context)
         {
             if(context == null) return; 
 
