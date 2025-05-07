@@ -1,7 +1,7 @@
 ﻿namespace Catalog.Products.Features.UpdateProduct
 {
     public record UpdateProductRequest(ProductDto Product);
-    public record UpdateProductResponse(bool isSuccess);
+    public record UpdateProductResponse(bool IsSuccess);
     public class UpdateProductEndpoint : ICarterModule
     {
         public void AddRoutes(IEndpointRouteBuilder app)
