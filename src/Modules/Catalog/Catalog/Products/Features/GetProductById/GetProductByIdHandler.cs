@@ -12,7 +12,7 @@
             //return the result
             var product = await dbContext.Products
                 .AsNoTracking()
-                .SingleOrDefaultAsync(p => p.Id == query.Id, cancellationToken) ?? throw new Exception($"Produto com  id {query.Id} não encontrado");
+                .SingleOrDefaultAsync(p => p.Id == query.Id, cancellationToken) ?? throw new ProductNotFoundException(query.Id);
 
             //mapping product entity to productDto using Mapster
             var productDto = product.Adapt<ProductDto>();

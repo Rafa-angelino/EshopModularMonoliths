@@ -1,5 +1,10 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Host.UseSerilog((context, config) =>
+    config
+    .ReadFrom.Configuration(context.Configuration)); // Configura o Serilog para ler as configurações do appsettings.json
+
+
 // Add services to the container.
 
 builder.Services.AddCarterWithAssemblies(
@@ -12,15 +17,19 @@ builder.Services
     .AddBasketModule(builder.Configuration)
     .AddOrderingModule(builder.Configuration);
 
+builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline. 
 
 app.MapCarter();
+app.UseSerilogRequestLogging(); //adiciona middleware para logar requisições
+app.UseExceptionHandler(options => { });
 
 app
     .UseCatalogModule()
     .UseBasketModule()
-    .UseOrderingModule();   
+    .UseOrderingModule();
 
 app.Run();
